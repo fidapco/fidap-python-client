@@ -30,6 +30,7 @@ def send_email(json: _T, emails: List[str]) -> None:
     content = '<strong>Text Email from Fidap<strong>'
     subject = 'Fidap.co Sending with Twilio SendGrid is Fun'
     df = pd.read_json(json)
+    df = df.iloc[0:1000, 0:30]
     data = df.to_csv()
     data = data.encode('ascii')
     attachment = Attachment(
