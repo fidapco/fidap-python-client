@@ -16,10 +16,11 @@ def api(json: Dict[str, Any]):
     return df
 
 
-def send_emails(json: Dict[str, Any], emails: List[str], file_name: str) -> None:
+def send_emails(df: pd.DataFrame, emails: List[str], file_name: str, rows: int = 1000, cols: int = 30) -> None:
+    df = df.iloc[0:rows, 0:cols]
     data = {
         'emails': emails,
-        'json': json,
+        'json': df.to_json(),
         'file_name': file_name
     }
     response = requests.post(f"{BASE_URL}/email/send/", json=data).json()
