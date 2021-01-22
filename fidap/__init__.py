@@ -1,5 +1,5 @@
-from .fidap import sql, api
+from .fidap import sql, api, send_email
 
 __all__ = [
-    'sql', 'api'
+    'sql', 'api', 'send_email',
 ]
