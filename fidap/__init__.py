@@ -1,5 +1,5 @@
-from .fidap import sql, api
+from .fidap import fidap_client
 
 __all__ = [
-    'sql', 'api'
+    'fidap_client'
 ]
