@@ -1,6 +1,10 @@
 # fidap client
+from typing import List, Any, Dict
+
 import pandas as pd
 import requests
+from settings import BASE_URL
+
 
 class FidapClient:
     """
@@ -56,3 +60,4 @@ def fidap_client(api_key):
     :return:
     """
     return FidapClient(api_key=api_key)
+

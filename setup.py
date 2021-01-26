@@ -31,6 +31,7 @@ install_requires = [
     'pandas >= 0.14',
     'numpy >= 1.8',
     'requests >= 2.7.0',
+    'python-dotenv >= 0.15.0'
 ]
 
 if __name__ == '__main__':
