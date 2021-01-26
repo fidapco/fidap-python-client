@@ -12,21 +12,27 @@ class FidapClient:
     """
     _api_key = None
     _api_secret = None
+    _custom_db = None
 
-    def __init__(self, api_key, api_secret):
+    def __init__(self, db, api_key, api_secret):
         """
+        :param db:
         :param api_key:
         :param api_secret:
         """
+        self._custom_db = db
         self._api_key = api_key
         self._api_secret = api_secret
+
+    def api_keys(self):
+        return {'api_key': self._api_key, 'api_secret': self._api_secret, 'db': self._custom_db}
 
     def sql(self, sql):
         """
         :param sql: SQL query here in str
         :return: Pandas Dataframe
         """
-        return self.api({'func': 'sql', 'sql': sql, 'api_key': self._api_key, 'api_secret': self._api_secret})
+        return self.api({'func': 'sql', 'sql': sql, **self.api_keys()})
 
     def api(self, json: Dict[str, Any]):
         """
@@ -51,16 +57,17 @@ class FidapClient:
             'emails': emails,
             'json': df.to_json(),
             'file_name': file_name,
-            'api_key': self._api_key,
-            'api_secret': self._api_secret,
+            **self.api_keys()
         }
         response = requests.post(f"{BASE_URL}/email/send/", json=data).json()
         return response['success']
 
 
-def fidap_client(api_key, api_secret=None):
+def fidap_client(db, api_key, api_secret=None):
     """
+    :param db
     :param api_key:
+    :param api_secret:
     :return:
     """
-    return FidapClient(api_key=api_key, api_secret=api_secret)
+    return FidapClient(db=db, api_key=api_key, api_secret=api_secret)
