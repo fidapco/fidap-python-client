@@ -12,33 +12,32 @@ pip install fidap
 from fidap import fidap_client
 client = fidap_client(api_key="Paste API_KEY here from fidap dashboard")
 ```
-you can also provide the database during instantiating client
+you can also provide the database during initializing the client
 ```python
 from fidap import fidap_client
 client = fidap_client(db='pg', api_key="Paste API_KEY here from fidap dashboard")
 ```
 ## Usages
 ### .sql
-You can run your queries py using 'sql' method, it will return result in Pandas dataframe
+You can run your queries by using this method, it will return a Pandas dataframe containing the results of the query. Result would be None if something goes wrong i.e. incorrect query / not a valid API key.
 ```python
 from fidap import fidap_client
 client = fidap_client(api_key="Paste API_KEY here from fidap dashboard")
 df = client.sql(sql="paste your QUERY")
 ```
-*Note:* If api_key is not valid it will return None instead of pandas dataframe
-You can also change the database here.
+*NOTE:* You can also change the database at this level!
 ```python
 df = client.sql(sql="paste your QUERY", db="sf")
 ```
 ### .send_email
-You can send Pandas dataframe as csv attachment by using this method, and return True if success and False if something wrong OR api_key isn't correct 
+You can send yourself or someone you know the Pandas dataframe as a csv attachment by using this method.
 ```python
 from fidap import fidap_client
 client = fidap_client(api_key="Paste API_KEY here from fidap dashboard")
 df = client.sql(sql="paste your QUERY")
 success = client.send_email(df=df, emails=[]) #'List of Emails')
 ```
-By default, it will share the file containing 1000 rows and 30 columns only
+*NOTE:* By default, it will share the file containing 1000 rows and 30 columns only
 
 ## Development installation
 ```bash
