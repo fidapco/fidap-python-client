@@ -1,4 +1,3 @@
-###### Query Financial Data Directly.
 # Fidap Python Client
 This Fidap client interacts with our big data servers and gives you access to Financial data analytics.
 
