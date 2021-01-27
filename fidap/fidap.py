@@ -39,8 +39,10 @@ class FidapClient:
         :param json: JSON contain function and sql values
         :return: return Pandas Dataframe
         """
-        response = requests.post(f"{BASE_URL}/api", json=json)
-        df = pd.read_json(response.json()['result'])
+        df = None
+        response = requests.post(f"{BASE_URL}/api", json=json).json()
+        if response['success']:
+            df = pd.read_json(response['result'])
         return df
 
     def send_email(self, df: pd.DataFrame, emails: List[str], file_name: str, rows: int = 1000, cols: int = 30) -> bool:
