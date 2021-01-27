@@ -1,6 +1,6 @@
 ###### Query Financial Data Directly.
 # Fidap Python Client
-User can run queries by using Fidap client. It provides some helpful methods to Users.
+This Fidap client interacts with our big data servers and gives you access to Financial data analytics.
 
 **NOTE**: You can get `api_key` from the [dashboard](http://dashboard.fidap.co). Please contact `ashishsingal1@gmail.com` for the invite code.
 ## Installation
