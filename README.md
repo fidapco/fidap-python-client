@@ -1,7 +1,6 @@
-Query financial data directly.
-
+###### Query Financial Data Directly.
 # Fidap Python Client
-##Description
+## Description
 User can run queries by using Fidap client. It provides some useful methods Users. For this purpose you should have api_key.
 ## Installation
 ```bash
