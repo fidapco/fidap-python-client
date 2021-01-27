@@ -7,7 +7,7 @@ User can run queries by using Fidap client. It provides some helpful methods to 
 ```bash
 pip install fidap
 ```
-## Connect to Server
+## Getting Started
 ```python
 from fidap import fidap_client
 client = fidap_client(api_key="Paste API_KEY here from fidap dashboard")
@@ -17,7 +17,7 @@ you can also provide the database during initializing the client
 from fidap import fidap_client
 client = fidap_client(db='pg', api_key="Paste API_KEY here from fidap dashboard")
 ```
-## Usages
+## API
 ### .sql
 You can run your queries by using this method, it will return a Pandas dataframe containing the results of the query. Result would be None if something goes wrong i.e. incorrect query / not a valid API key.
 ```python
@@ -39,7 +39,7 @@ success = client.send_email(df=df, emails=[]) #'List of Emails')
 ```
 *NOTE:* By default, it will share the file containing 1000 rows and 30 columns only
 
-## Development installation
+## Contributing
 ```bash
 git clone https://github.com/fidapco/fidap-python-client.git
 cd fidap-python-client
