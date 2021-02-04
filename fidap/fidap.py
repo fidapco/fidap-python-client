@@ -3,7 +3,7 @@ from typing import List, Any, Dict
 
 import pandas as pd
 import requests
-from settings import BASE_URL
+from .settings import BASE_URL
 
 
 class FidapClient:
