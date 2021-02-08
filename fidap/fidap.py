@@ -68,7 +68,7 @@ class FidapClient:
         return response['success']
 
 
-def fidap_client(api_key, db='pg', api_secret=None):
+def fidap_client(api_key, db='sf', api_secret=None):
     """
     :param db: Sting
     :param api_key: String
