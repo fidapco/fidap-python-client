@@ -43,9 +43,12 @@ class FidapClient:
         :return: return Pandas Dataframe
         """
         df = None
-        response = requests.post(f"{BASE_URL}/api", json=json).json()
-        if response['success']:
-            df = pd.read_json(response['result'])
+        res = requests.post(f"{BASE_URL}/api", json=json)
+        res.raise_for_status()
+        if res.status_code == 200:
+            response = res.json()
+            if response['success']:
+                df = pd.read_json(response['result'])
         return df
 
     def send_email(self, df: pd.DataFrame, emails: List[str], file_name: str, rows: int = 1000, cols: int = 30) -> bool:
