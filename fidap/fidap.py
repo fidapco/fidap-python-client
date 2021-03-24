@@ -35,17 +35,19 @@ class FidapClient:
         """
         if db:
             self._custom_db = db
-        return self.api({'func': 'sql', 'sql': sql, **self.api_keys})
+        return self.api({'func': 'sql', 'sql_query': sql, **self.api_keys})
 
     def api(self, json: Dict[str, Any]):
         """
         :param json: JSON contain function and sql values
         :return: return Pandas Dataframe
         """
-        df = None
-        response = requests.post(f"{BASE_URL}/api", json=json).json()
-        if response['success']:
-            df = pd.read_json(response['result'])
+        response = requests.post(f"{BASE_URL}/api/v1/query/fidap/api/", json=json)
+        if response.status_code == 400:
+            return response.reason
+        if response.status_code == 402:
+            return response.json()
+        df = pd.read_json(response.json())
         return df
 
     def send_email(self, df: pd.DataFrame, emails: List[str], file_name: str, rows: int = 1000, cols: int = 30) -> bool:
