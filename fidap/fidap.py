@@ -42,12 +42,12 @@ class FidapClient:
         :param json: JSON contain function and sql values
         :return: return Pandas Dataframe
         """
-        response = requests.post(f"{BASE_URL}/api/v1/query/fidap/api/", json=json)
+        response = requests.post(f"{BASE_URL}/api/v1/query/run/query/", json=json)
+        if response.status_code == 401:
+            return response.json()['detail']
         if response.status_code == 400:
-            return response.reason
-        if response.status_code == 402:
-            return response.json()
-        df = pd.read_json(response.json())
+            return response.json()['detail']
+        df = pd.read_json(response.json()['data'])
         return df
 
     def send_email(self, df: pd.DataFrame, emails: List[str], file_name: str, rows: int = 1000, cols: int = 30) -> bool:
@@ -62,11 +62,11 @@ class FidapClient:
         df = df.iloc[0:rows, 0:cols]
         data = {
             'emails': emails,
-            'json': df.to_json(),
+            'df_data': df.to_json(),
             'file_name': file_name,
             **self.api_keys
         }
-        response = requests.post(f"{BASE_URL}/email/send/", json=data).json()
+        response = requests.post(f"{BASE_URL}/api/v1/common/send/email/", json=data).json()
         return response['success']
 
 
