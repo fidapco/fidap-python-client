@@ -37,6 +37,20 @@ class FidapClient:
             self._custom_db = db
         return self.api({'sql_query': sql, **self.api_keys})
 
+    def tickers(self, field, ticker, db):
+        """
+        :param field: field for lookup
+        :param ticker: ticker for specify a ticker type
+        :param db: database connection type
+        :return: Pandas Dataframe
+        """
+        query = dict(
+            bq=f"select {field} from tickers where fidapschema.ticker='{ticker}'",
+            sf=f"select {field} from tickers where ticker='{ticker}'",
+            s3=f"select {field} from tickers where ticker='{ticker}'"
+        )
+        return self.sql(sql=query[db if db else self._custom_db], db=db)
+
     def api(self, json: Dict[str, Any]):
         """
         :param json: JSON contain function and sql values
