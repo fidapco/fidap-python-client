@@ -35,7 +35,7 @@ class FidapClient:
         """
         if db:
             self._custom_db = db
-        return self.api({'func': 'sql', 'sql_query': sql, **self.api_keys})
+        return self.api({'sql_query': sql, **self.api_keys})
 
     def api(self, json: Dict[str, Any]):
         """
@@ -45,6 +45,8 @@ class FidapClient:
         response = requests.post(f"{BASE_URL}/api/v1/query/run/query/", json=json)
         if response.status_code == 400:
             return response.json()
+        if response.status_code == 401:
+            return response.json()['detail']
         df = pd.read_json(response.json()['data'])
         return df
 
