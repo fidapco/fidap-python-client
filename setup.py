@@ -24,14 +24,14 @@ setup_args = dict(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.6'
 )
 
 install_requires = [
     'pandas >= 0.14',
     'numpy >= 1.8',
     'requests >= 2.7.0',
-    'python-dotenv >= 0.15.0'
+    'delta-sharing'
 ]
 
 if __name__ == '__main__':

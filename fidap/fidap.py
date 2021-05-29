@@ -4,7 +4,8 @@ from typing import List, Any, Dict
 import pandas as pd
 import requests
 from .settings import BASE_URL
-
+import delta_sharing
+import os
 
 class FidapClient:
     """
@@ -23,7 +24,7 @@ class FidapClient:
         self._custom_db = db
         self._api_key = api_key
         self._api_secret = api_secret
-
+    
     @property
     def api_keys(self):
         return {'api_key': self._api_key, 'api_secret': self._api_secret, 'db': self._custom_db}
@@ -36,6 +37,19 @@ class FidapClient:
         if db:
             self._custom_db = db
         return self.api({'sql_query': sql, **self.api_keys})
+    
+    def load_table_as_pandas(self, share_name = "fidap_share", schema_name = None, table_name= None):
+        file_path = "https://fidap.s3-us-west-2.amazonaws.com/fidap_data.share"
+        client = delta_sharing.SharingClient(file_path)
+        table_url = file_path + "#" + f"{share_name}.{schema_name}.{table_name}"
+        df = delta_sharing.load_as_pandas(table_url) 
+        return df    
+    
+    def load_table_as_spark(self, share_name = "fidap_share", schema_name = None, table_name= None):
+        client = delta_sharing.SharingClient("https://fidap.s3-us-west-2.amazonaws.com/fidap_data.share")
+        table_url = "s3a://fidap/fidap_data.share" + "#" + f"{share_name}.{schema_name}.{table_name}"
+        df = delta_sharing.load_as_spark(table_url) 
+        return df    
 
     def tickers(self, field, ticker, db):
         """
