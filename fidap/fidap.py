@@ -1,5 +1,6 @@
 # fidap client
 from typing import List, Any, Dict
+from typing_extensions import ParamSpecArgs
 
 import pandas as pd
 import requests
@@ -12,36 +13,38 @@ class FidapClient:
     """
     _api_key = None
     _api_secret = None
-    _custom_db = None
+    _custom_source = None
+    _headers = None
 
-    def __init__(self, db, api_key, api_secret):
+    def __init__(self, source, api_key, api_secret):
         """
-        :param db:
+        :param source:
         :param api_key:
         :param api_secret:
         """
-        self._custom_db = db
+        self._custom_source = source
         self._api_key = api_key
         self._api_secret = api_secret
+        self._headers = {"api-key": api_key}
 
     @property
     def api_keys(self):
-        return {'api_key': self._api_key, 'api_secret': self._api_secret, 'db': self._custom_db}
+        return {'api_key': self._api_key, 'api_secret': self._api_secret, 'db': self._custom_source}
 
-    def sql(self, sql, db=None):
+    def sql(self, sql, source=None):
         """
         :param sql: SQL query here in str
         :return: Pandas Dataframe
         """
-        if db:
-            self._custom_db = db
+        if source:
+            self._custom_source = source
         return self.api({'sql_query': sql, **self.api_keys})
 
-    def tickers(self, field, ticker, db):
+    def tickers(self, field, ticker, source):
         """
         :param field: field for lookup
         :param ticker: ticker for specify a ticker type
-        :param db: database connection type
+        :param source: source connection type snowflake, bigquery etc.
         :return: Pandas Dataframe
         """
         query = dict(
@@ -49,14 +52,14 @@ class FidapClient:
             sf=f"select {field} from tickers where ticker='{ticker}'",
             s3=f"select {field} from tickers where ticker='{ticker}'"
         )
-        return self.sql(sql=query[db if db else self._custom_db], db=db)
+        return self.sql(sql=query[source if source else self._custom_source], source=source)
 
     def api(self, json: Dict[str, Any]):
         """
         :param json: JSON contain function and sql values
         :return: return Pandas Dataframe
         """
-        response = requests.post(f"{BASE_URL}/api/v1/query/run/query/", json=json)
+        response = requests.post(f"{BASE_URL}/api/v1/query/run/query/", json=json, headers=self._headers)
         if response.status_code == 400:
             return response.json()
         if response.status_code == 401:
@@ -80,15 +83,77 @@ class FidapClient:
             'file_name': file_name,
             **self.api_keys
         }
-        response = requests.post(f"{BASE_URL}/api/v1/common/send/email/", json=data).json()
+        response = requests.post(f"{BASE_URL}/api/v1/common/send/email/", json=data, headers=self._headers).json()
         return response['success']
+    
+    def create_dataset(self, name=None, description=None, source=None, project=None, dataset=None, public=False):
+        """
+        :param name: String field required, Dataset name it should be unique
+        :param description: Discription about dataset, it is optional field
+        :param source: It is optional field otherwise fidapclient source will be considered
+        :param project: Name of Bigquery or Snowflake project/dataset  
+        :param dataset: Name of bigquery dataset in the project, for snowflake it will be schema name
+        :param public: Created dataset in fidap project is public or not public, defualt public=False
+        :return: return bool value status True= Created, False = something went wrong
+        """
+        json = dict(
+            api_key=self._api_key,
+            source=source if source else self.api_keys["db"],
+            name=name,
+            description=description,
+            project=project,
+            schema=dataset,
+            is_public=public
+        )
+        response = requests.post(f"{BASE_URL}/api/v1/catalog/metadataset/", json=json, headers=self._headers)
+        if response.ok:
+            return True
+        else:
+            print(response.json())
+            return False
+
+    def datasets(self, limit=100):
+        """
+        :param limit: limit the result. default is 100
+        :return: json 
+        """
+        response = requests.get(f"{BASE_URL}/api/v1/catalog/metadataset/?page=1&page_size={limit}", headers=self._headers)
+        if response.ok:
+            return response.json()['results']
+        return response.json()
+
+    def dataset(self, dataset_id):
+        """
+        :param dataset_id: dataset id should be numeric.
+        :return: dataset info and tables list
+        """
+        dataset = requests.get(f"{BASE_URL}/api/v1/catalog/metadataset/{dataset_id}/", headers=self._headers).json()
+        tables = requests.get(f"{BASE_URL}/api/v1/catalog/metatable/", params=dict(id=dataset_id), headers=self._headers).json()
+        return dict(dataset_info=dataset, tables=tables)
+
+    def table(self, table_id):
+        """
+        :param table_id: table id should be numeric.
+        :return: table info and fields list
+        """
+        table = requests.get(f"{BASE_URL}/api/v1/catalog/metatable/{table_id}/", headers=self._headers).json()
+        fields = requests.get(f"{BASE_URL}/api/v1/catalog/metafield/", params=dict(q_table=table_id), headers=self._headers).json()
+        return dict(table=table, fields=fields)
+
+    def field(self, field_id):
+        """
+        :param field_id: field id should be numeric.
+        :return: field info.
+        """
+        field = requests.get(f"{BASE_URL}/api/v1/catalog/metafield/{field_id}/", headers=self._headers).json()
+        return field
 
 
-def fidap_client(api_key, db='bq', api_secret=None):
+def fidap_client(api_key, source='bq', api_secret=None):
     """
-    :param db: Sting
+    :param source: Sting
     :param api_key: String
     :param api_secret: String
     :return:
     """
-    return FidapClient(db=db, api_key=api_key, api_secret=api_secret)
+    return FidapClient(source=source, api_key=api_key, api_secret=api_secret)
