@@ -1,6 +1,5 @@
 # fidap client
 from typing import List, Any, Dict
-from typing_extensions import ParamSpecArgs
 
 import pandas as pd
 import requests
