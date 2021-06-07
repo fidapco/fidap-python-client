@@ -94,7 +94,7 @@ class FidapClient:
         :param project: Name of Bigquery or Snowflake project/dataset  
         :param dataset: Name of bigquery dataset in the project, for snowflake it will be schema name
         :param public: Created dataset in fidap project is public or not public, defualt public=False
-        :return: return bool value status True= Created, False = something went wrong
+        :return: return created object id.
         """
         json = dict(
             api_key=self._api_key,
@@ -107,10 +107,8 @@ class FidapClient:
         )
         response = requests.post(f"{BASE_URL}/api/v1/catalog/metadataset/", json=json, headers=self._headers)
         if response.ok:
-            return True
-        else:
-            print(response.json())
-            return False
+            return response.json()
+        return response.json()
 
     def datasets(self, limit=100):
         """
