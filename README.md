@@ -1,7 +1,7 @@
 # Fidap Python Client
 This Fidap client interacts with our big data servers and gives you access to Financial data analytics.
 
-**NOTE**: You can get `api_key` from the [dashboard](http://dashboard.fidap.co). Please contact `ashishsingal1@gmail.com` for the invite code.
+**NOTE**: You can get `api_key` from the [Dashboard](http://app.fidap.com). Please contact `ashishsingal1@gmail.com` for the invite code.
 ## Installation
 ```bash
 pip install fidap
@@ -14,7 +14,7 @@ client = fidap_client(api_key="Paste API_KEY here from fidap dashboard")
 you can also provide the database during initializing the client
 ```python
 from fidap import fidap_client
-client = fidap_client(db='pg', api_key="Paste API_KEY here from fidap dashboard")
+client = fidap_client(source='bq', api_key="Paste API_KEY here from fidap dashboard")
 ```
 ## API
 ### .sql
@@ -26,7 +26,7 @@ df = client.sql(sql="paste your QUERY")
 ```
 *NOTE:* You can also change the database at this level!
 ```python
-df = client.sql(sql="paste your QUERY", db="sf")
+df = client.sql(sql="paste your QUERY", source="sf_gcp")
 ```
 ### .send_email
 You can send yourself or someone you know the Pandas dataframe as a csv attachment by using this method.
@@ -37,7 +37,32 @@ df = client.sql(sql="paste your QUERY")
 success = client.send_email(df=df, emails=[]) #'List of Emails')
 ```
 *NOTE:* By default, it will share the file containing 1000 rows and 30 columns only
-
+### .create_dataset
+You can create dataset using this method and it can be seen on [Dashboard](https://app.fidap.com)
+```
+fidap.create_dataset(name, description, source, project, dataset, public=False)
+```
+### .datasets
+You can list dataset in json format by using this method
+```
+fidap.datasets(limit=100)
+```
+*NOTE:* By default, it will only 100 datasets you can increase the limit
+### .dataset
+This method takes one argument dataset_id and returns a dict contains dataset info and related tables list
+```
+fidap.dataset(dataset_id)
+```
+### .table
+This method takes one argument table_id and returns a dict contains table info and its fields list
+```
+fidap.table(table_id)
+```
+### .field
+This method takes one argument field_id and returns object contains info about table field.
+```
+fidap.field(field_id)
+```
 ## Contributing
 ```bash
 git clone https://github.com/fidapco/fidap-python-client.git
