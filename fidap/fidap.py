@@ -4,6 +4,7 @@ from typing import List, Any, Dict
 import pandas as pd
 import requests
 from .settings import BASE_URL
+import delta_sharing
 
 
 class FidapClient:
@@ -12,6 +13,7 @@ class FidapClient:
     """
     _api_key = None
     _api_secret = None
+    _file_path = "https://fidap.s3-us-west-2.amazonaws.com/fidap_data.share"
     _custom_source = None
     _headers = None
 
@@ -38,6 +40,18 @@ class FidapClient:
         if source:
             self._custom_source = source
         return self.api({'sql_query': sql, **self.api_keys})
+    
+    def load_table_as_pandas(self, share_name = "fidap_share", schema_name = None, table_name= None):
+        _ = delta_sharing.SharingClient(self._file_path)
+        table_url = self._file_path + "#" + f"{share_name}.{schema_name}.{table_name}"
+        df = delta_sharing.load_as_pandas(table_url) 
+        return df    
+    
+    def load_table_as_spark(self, share_name = "fidap_share", schema_name = None, table_name= None):
+        _ = delta_sharing.SharingClient(self._file_path)
+        table_url = "s3a://fidap/fidap_data.share" + "#" + f"{share_name}.{schema_name}.{table_name}"
+        df = delta_sharing.load_as_spark(table_url) 
+        return df    
 
     def tickers(self, field, ticker, source):
         """
