@@ -192,6 +192,15 @@ class FidapClient:
             response = "Invalid entity"
         return response
 
+    def update_dataset(self, dataset_id, values):
+        return self.update_entity('dataset', dataset_id, values)
+
+    def update_table(self, table_id, values):
+        return self.update_entity('table', table_id, values)
+
+    def update_field(self, field_id, values):
+        return self.update_entity('field', field_id, values)
+
 
 def fidap_client(api_key, source='bq', api_secret=None):
     """
