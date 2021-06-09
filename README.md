@@ -74,12 +74,12 @@ This method takes 2 arguments 1st dataset_id 2nd dict of values
 ```
 fidap.update_dataset(dataset_id=xxx, values=dict(description, name, is_public))
 ```
-###. update_table
+### .update_table
 This method takes 2 arguments 1st table_id 2nd dict of values
 ```
 fidap.update_table(table_id=xxx, values=dict(description, display_name, is_public))
 ```
-###. update_field
+### .update_field
 This method takes 2 arguments 1st field_id 2nd dict of values
 ```
 fidap.update_field(field_id=xxx, values=dict(description, display_name))
