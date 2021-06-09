@@ -41,17 +41,23 @@ class FidapClient:
             self._custom_source = source
         return self.api({'sql_query': sql, **self.api_keys})
     
-    def load_table_as_pandas(self, share_name = "fidap_share", schema_name = None, table_name= None):
+    def load_table_as_dataframe(self, share_name="fidap_share", schema_name=None, table_name=None, df_type='pandas'):
+        """
+        :param share_name: String, your share name default is fidap_share.
+        :param schema_name: String, Schema name where table exist.
+        :param table_name: String, Table name want to load.
+        :param df_type: String, pandas or spark.
+        :return dataframe.
+        """
         _ = delta_sharing.SharingClient(self._file_path)
         table_url = self._file_path + "#" + f"{share_name}.{schema_name}.{table_name}"
-        df = delta_sharing.load_as_pandas(table_url) 
-        return df    
-    
-    def load_table_as_spark(self, share_name = "fidap_share", schema_name = None, table_name= None):
-        _ = delta_sharing.SharingClient(self._file_path)
-        table_url = "s3a://fidap/fidap_data.share" + "#" + f"{share_name}.{schema_name}.{table_name}"
-        df = delta_sharing.load_as_spark(table_url) 
-        return df    
+        if df_type == 'spark':
+            df = delta_sharing.load_as_spark(table_url)
+        elif df_type == 'pandas':
+            df = delta_sharing.load_as_pandas(table_url)
+        else:
+            df = "Invalid dataframe type."
+        return df
 
     def tickers(self, field, ticker, source):
         """
