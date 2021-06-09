@@ -193,12 +193,27 @@ class FidapClient:
         return response
 
     def update_dataset(self, dataset_id, values):
+        """
+        :param dataset_id: Number, dataset id
+        :param values: dict of values, name, description, is_public
+        :return dataset
+        """
         return self.update_entity('dataset', dataset_id, values)
 
     def update_table(self, table_id, values):
+        """
+        :param table_id: Number, table table_id
+        :param values: dict of values, display_name, description, is_public
+        :return table
+        """
         return self.update_entity('table', table_id, values)
 
     def update_field(self, field_id, values):
+        """
+        :param field_id: Number, field id
+        :param values: dict of values, display_name, description
+        :return field
+        """
         return self.update_entity('field', field_id, values)
 
 
