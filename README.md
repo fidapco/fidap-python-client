@@ -40,7 +40,13 @@ success = client.send_email(df=df, emails=[]) #'List of Emails')
 ### .create_dataset
 You can create dataset using this method and it can be seen on [Dashboard](https://app.fidap.com)
 ```
-fidap.create_dataset(name, description, source, project, dataset, public=False)
+fidap.create_dataset(
+        name='xxx', 
+        description='xxxx', 
+        source='bq', project='xxxx', 
+        dataset='xxxx', 
+        public=False
+   )
 ```
 ### .datasets
 You can list dataset in json format by using this method
@@ -63,6 +69,26 @@ This method takes one argument field_id and returns object contains info about t
 ```
 fidap.field(field_id)
 ```
+### .update_entity
+This method takes 3 arguments entity name (dataset, table, field) and 2nd argument is entity's id and 3rd argument is dict, which attribute you want to update.
+```
+fidap.update_entity(
+      entity='dataset', 
+      id=xxx, 
+      values=dict(description="This dataset is very fascinating, fidap datasets are awesome")
+    )
+```
+### .load_table_as_dataframe
+Load table via delta share, df_type can be 'pandas' or 'spark'
+```
+fidap.load_table_as_dataframe(
+      share_name='xxx',
+      schema='xxx',
+      table_name='xxx',
+      df_type=pandas
+    )
+```
+
 ## Contributing
 ```bash
 git clone https://github.com/fidapco/fidap-python-client.git
