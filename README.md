@@ -1,7 +1,7 @@
 # Fidap Python Client
-This Fidap client interacts with our big data servers and gives you access to Financial data analytics.
+This Fidap client connect to our big data warehouses and gives you seamless access to external data.
 
-**NOTE**: You can get `api_key` from the [Dashboard](http://app.fidap.com). Please contact `ashishsingal1@gmail.com` for the invite code.
+**NOTE**: Fidap is currently invite only and requires an `api_key` to work.
 ## Installation
 ```bash
 pip install fidap
