@@ -83,7 +83,7 @@ Load table via delta share, df_type can be 'pandas' or 'spark'
 ```
 fidap.load_table_as_dataframe(
       share_name='xxx',
-      schema='xxx',
+      schema_name='xxx',
       table_name='xxx',
       df_type=pandas
     )
