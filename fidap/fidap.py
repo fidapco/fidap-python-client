@@ -140,7 +140,7 @@ class FidapClient:
         """
         dataset = requests.get(f"{BASE_URL}/api/v1/catalog/metadataset/{dataset_id}/", headers=self._headers).json()
         tables = requests.get(f"{BASE_URL}/api/v1/catalog/metatable/", params=dict(id=dataset_id), headers=self._headers).json()
-        return dict(dataset_info=dataset, tables=tables)
+        return dict(dataset=dataset, tables=tables)
 
     def table(self, table_id):
         """
@@ -158,6 +158,33 @@ class FidapClient:
         """
         field = requests.get(f"{BASE_URL}/api/v1/catalog/metafield/{field_id}/", headers=self._headers).json()
         return field
+
+    def update_entity(self, entity, id, values):
+        """
+        :param entity:  String , dataset, table, field
+        :param id: Number, entity id
+        :param values: dict of values, display_name, description, is_public
+        :return entity
+        """
+        if entity == "dataset":
+            response = requests.patch(
+                f"{BASE_URL}/api/v1/catalog/metadataset/{id}/", headers=self._headers, json=values
+            ).json()
+        elif entity == "table":
+            response = requests.patch(
+                f"{BASE_URL}/api/v1/catalog/metatable/{id}/",
+                headers=self._headers,
+                json=values
+            ).json()
+        elif entity == 'field':
+            response = requests.patch(
+                f"{BASE_URL}/api/v1/catalog/metafield/{id}/",
+                headers=self._headers,
+                json=values
+            ).json()
+        else:
+            response = "Invalid entity"
+        return response
 
 
 def fidap_client(api_key, source='bq', api_secret=None):
