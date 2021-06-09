@@ -9,7 +9,7 @@ with open('HISTORY.md') as history_file:
 setup_args = dict(
     name='fidap',
     version='0.0.15',
-    description='Get financial data easily.',
+    description='Access clean external data easily.',
     long_description_content_type="text/markdown",
     long_description=README + '\n\n' + HISTORY,
     license='MIT',
