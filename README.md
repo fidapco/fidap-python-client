@@ -72,17 +72,17 @@ fidap.field(field_id)
 ### .update_dataset
 This method takes 2 arguments 1st dataset_id 2nd dict of values
 ```
-fidap.update_dataset(dataset_id=xxx, values=dict(description, name, is_public, additional=JSON))
+fidap.update_dataset(dataset_id=xxx, values=dict(description, name, is_public, additional_data=JSON))
 ```
 ### .update_table
 This method takes 2 arguments 1st table_id 2nd dict of values
 ```
-fidap.update_table(table_id=xxx, values=dict(description, display_name, is_public, additional=JSON))
+fidap.update_table(table_id=xxx, values=dict(description, display_name, is_public, additional_data=JSON))
 ```
 ### .update_field
 This method takes 2 arguments 1st field_id 2nd dict of values
 ```
-fidap.update_field(field_id=xxx, values=dict(description, display_name, additional=JSON))
+fidap.update_field(field_id=xxx, values=dict(description, display_name, additional_data=JSON))
 ```
 ### .update_entity
 This method takes 3 arguments entity name (dataset, table, field) and 2nd argument is entity's id and 3rd argument is dict, which attribute you want to update.
