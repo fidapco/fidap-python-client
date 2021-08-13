@@ -129,41 +129,55 @@ class FidapClient:
             return response.json()
         return response.json()
 
-    def datasets(self, limit=100):
+    def datasets(self, limit=100, json=False):
         """
         :param limit: limit the result. default is 100
-        :return: json 
+        :param json: Boolean flag return json or dataframe default value is False.
+        :return: json
         """
         response = requests.get(f"{BASE_URL}/api/v1/catalog/metadataset/?page=1&page_size={limit}", headers=self._headers)
-        if response.ok:
+        if response.ok and json:
             return response.json()['results']
+        elif response.ok:
+            return pd.DataFrame(response.json()['results'])
         return response.json()
 
-    def dataset(self, dataset_id):
+    def dataset(self, dataset_id, json=False):
         """
         :param dataset_id: dataset id should be numeric.
+        :param json: Boolean flag, if value is True return json else return dict of dataframe default value is False.
         :return: dataset info and tables list
         """
         dataset = requests.get(f"{BASE_URL}/api/v1/catalog/metadataset/{dataset_id}/", headers=self._headers).json()
-        tables = requests.get(f"{BASE_URL}/api/v1/catalog/metatable/", params=dict(id=dataset_id), headers=self._headers).json()
-        return dict(dataset=dataset, tables=tables)
+        tables = requests.get(
+            f"{BASE_URL}/api/v1/catalog/metatable/", params=dict(id=dataset_id), headers=self._headers
+        ).json()
+        if json:
+            return dict(dataset=dataset, tables=tables)
+        return dict(dataset=pd.DataFrame([dataset]), tables=pd.DataFrame(tables))
 
-    def table(self, table_id):
+    def table(self, table_id, json=False):
         """
         :param table_id: table id should be numeric.
+        :param json: Boolean flag, if value is True return json else return dict of dataframe default value is False.
         :return: table info and fields list
         """
         table = requests.get(f"{BASE_URL}/api/v1/catalog/metatable/{table_id}/", headers=self._headers).json()
         fields = requests.get(f"{BASE_URL}/api/v1/catalog/metafield/", params=dict(q_table=table_id), headers=self._headers).json()
-        return dict(table=table, fields=fields)
+        if json:
+            return dict(table=table, fields=fields)
+        return dict(table=pd.DataFrame([table]), fields=pd.DataFrame(fields))
 
-    def field(self, field_id):
+    def field(self, field_id, json=False):
         """
         :param field_id: field id should be numeric.
+        :param json: Boolean flag, if value is True return json else return dict of dataframe default value is False.
         :return: field info.
         """
         field = requests.get(f"{BASE_URL}/api/v1/catalog/metafield/{field_id}/", headers=self._headers).json()
-        return field
+        if json:
+            return field
+        return pd.DataFrame([field])
 
     def update_entity(self, entity, id, values):
         """
