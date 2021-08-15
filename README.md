@@ -49,26 +49,29 @@ fidap.create_dataset(
    )
 ```
 ### .datasets
-You can list dataset in json format by using this method
+You can list dataset in json format or pandas dataframe by using this method
 ```
-fidap.datasets(limit=100)
+fidap.datasets(limit=100, json=True)
 ```
-*NOTE:* By default, it will only 100 datasets you can increase the limit
+*NOTE:* By default, it will return only pandas dataframe of 100 datasets, you can increase the limit and change the output format.
 ### .dataset
-This method takes one argument dataset_id and returns a dict contains dataset info and related tables list
+This method takes two arguments dataset_id and returns a dict of dataframes contains dataset info and its table.
 ```
-fidap.dataset(dataset_id)
+fidap.dataset(dataset_id, json=False)
 ```
+*NOTE:* By default json=False, when json=True it will return json.
 ### .table
-This method takes one argument table_id and returns a dict contains table info and its fields list
+This method takes one argument table_id and returns a dict of dataframes contains table info and its fields list
 ```
-fidap.table(table_id)
+fidap.table(table_id, json=False)
 ```
+*NOTE:* By default json=False, when json=True it will return json.
 ### .field
-This method takes one argument field_id and returns object contains info about table field.
+This method takes one argument field_id and returns pandas dataframe contains info about table field.
 ```
-fidap.field(field_id)
+fidap.field(field_id, json=False)
 ```
+*NOTE:* By default json=False, when json=True it will return json.
 ### .update_dataset
 This method takes 2 arguments 1st dataset_id 2nd dict of values
 ```
